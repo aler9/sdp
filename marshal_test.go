@@ -36,7 +36,7 @@ const (
 func TestMarshalCanonical(t *testing.T) {
 	sd := &SessionDescription{
 		Version: 0,
-		Origin: Origin{
+		Origin: &Origin{
 			Username:       "jdoe",
 			SessionID:      uint64(2890844526),
 			SessionVersion: uint64(2890842807),
@@ -44,7 +44,10 @@ func TestMarshalCanonical(t *testing.T) {
 			AddressType:    "IP4",
 			UnicastAddress: "10.47.16.5",
 		},
-		SessionName:        "SDP Seminar",
+		SessionName: func() *SessionName {
+			ret := SessionName("SDP Seminar")
+			return &ret
+		}(),
 		SessionInformation: &(&struct{ x Information }{"A Seminar on the session description protocol"}).x,
 		URI: func() *url.URL {
 			uri, err := url.Parse("http://www.example.com/seminars/sdp.pdf")

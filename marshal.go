@@ -8,8 +8,8 @@ import (
 // https://tools.ietf.org/html/rfc4566#section-5
 // Session description
 //    v=  (protocol version)
-//    o=  (originator and session identifier)
-//    s=  (session name)
+//    o=* (originator and session identifier)
+//    s=* (session name)
 //    i=* (session information)
 //    u=* (URI of description)
 //    e=* (email address)
@@ -17,7 +17,7 @@ import (
 //    c=* (connection information -- not required if included in
 //         all media)
 //    b=* (zero or more bandwidth information lines)
-//    One or more time descriptions ("t=" and "r=" lines; see below)
+//    Zero or more time descriptions ("t=" and "r=" lines; see below)
 //    z=* (time zone adjustments)
 //    k=* (encryption key)
 //    a=* (zero or more session attribute lines)
@@ -38,8 +38,14 @@ import (
 func (s *SessionDescription) Marshal() ([]byte, error) {
 	m := new(marshaller)
 	m.addKeyValue("v=", s.Version.String())
-	m.addKeyValue("o=", s.Origin.String())
-	m.addKeyValue("s=", s.SessionName.String())
+
+	if s.Origin != nil {
+		m.addKeyValue("o=", s.Origin.String())
+	}
+
+	if s.SessionName != nil {
+		m.addKeyValue("s=", s.SessionName.String())
+	}
 
 	if s.SessionInformation != nil {
 		m.addKeyValue("i=", s.SessionInformation.String())

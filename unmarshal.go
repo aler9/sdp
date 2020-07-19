@@ -24,8 +24,8 @@ import (
 // https://tools.ietf.org/html/rfc4566#section-5
 // Session description
 //    v=  (protocol version)
-//    o=  (originator and session identifier)
-//    s=  (session name)
+//    o=* (originator and session identifier)
+//    s=* (session name)
 //    i=* (session information)
 //    u=* (URI of description)
 //    e=* (email address)
@@ -33,7 +33,7 @@ import (
 //    c=* (connection information -- not required if included in
 //         all media)
 //    b=* (zero or more bandwidth information lines)
-//    One or more time descriptions ("t=" and "r=" lines; see below)
+//    Zero or more time descriptions ("t=" and "r=" lines; see below)
 //    z=* (time zone adjustments)
 //    k=* (encryption key)
 //    a=* (zero or more session attribute lines)
@@ -69,13 +69,13 @@ import (
 // | STATES | a* | a*,k* | a  | a,k | b  | b,c | e | i  | m  | o | p | r,t | s | t | u  | v | z  |
 // +--------+----+-------+----+-----+----+-----+---+----+----+---+---+-----+---+---+----+---+----+
 // |   s1   |    |       |    |     |    |     |   |    |    |   |   |     |   |   |    | 2 |    |
-// |   s2   |    |       |    |     |    |     |   |    |    | 3 |   |     |   |   |    |   |    |
-// |   s3   |    |       |    |     |    |     |   |    |    |   |   |     | 4 |   |    |   |    |
-// |   s4   |    |       |    |     |    |   5 | 6 |  7 |    |   | 8 |     |   | 9 | 10 |   |    |
-// |   s5   |    |       |    |     |  5 |     |   |    |    |   |   |     |   | 9 |    |   |    |
-// |   s6   |    |       |    |     |    |   5 |   |    |    |   | 8 |     |   | 9 |    |   |    |
-// |   s7   |    |       |    |     |    |   5 | 6 |    |    |   | 8 |     |   | 9 | 10 |   |    |
-// |   s8   |    |       |    |     |    |   5 |   |    |    |   |   |     |   | 9 |    |   |    |
+// |   s2   |    |       |    |     |    |     |   |    | 12 | 3 |   |     | 4 |   |    |   |    |
+// |   s3   |    |       |    |     |    |     |   |    | 12 |   |   |     | 4 |   |    |   |    |
+// |   s4   |    |       |    |     |    |   5 | 6 |  7 | 12 |   | 8 |     |   | 9 | 10 |   |    |
+// |   s5   |    |       |    |     |  5 |     |   |    | 12 |   |   |     |   | 9 |    |   |    |
+// |   s6   |    |       |    |     |    |   5 |   |    | 12 |   | 8 |     |   | 9 |    |   |    |
+// |   s7   |    |       |    |     |    |   5 | 6 |    | 12 |   | 8 |     |   | 9 | 10 |   |    |
+// |   s8   |    |       |    |     |    |   5 |   |    | 12 |   |   |     |   | 9 |    |   |    |
 // |   s9   |    |       |    |  11 |    |     |   |    | 12 |   |   |   9 |   |   |    |   | 13 |
 // |   s10  |    |       |    |     |    |   5 | 6 |    |    |   | 8 |     |   | 9 |    |   |    |
 // |   s11  |    |       | 11 |     |    |     |   |    | 12 |   |   |     |   |   |    |   |    |
@@ -123,8 +123,13 @@ func s2(l *lexer) (stateFn, error) {
 		return nil, fmt.Errorf("sdp: invalid syntax `%v`", key)
 	}
 
-	if key == "o=" {
+	switch key {
+	case "o=":
 		return unmarshalOrigin, nil
+	case "s=":
+		return unmarshalSessionName, nil
+	case "m=":
+		return unmarshalMediaDescription, nil
 	}
 
 	return nil, fmt.Errorf("sdp: invalid syntax `%v`", key)
@@ -136,8 +141,11 @@ func s3(l *lexer) (stateFn, error) {
 		return nil, err
 	}
 
-	if key == "s=" {
+	switch key {
+	case "s=":
 		return unmarshalSessionName, nil
+	case "m=":
+		return unmarshalMediaDescription, nil
 	}
 
 	return nil, fmt.Errorf("sdp: invalid syntax `%v`", key)
@@ -164,6 +172,8 @@ func s4(l *lexer) (stateFn, error) {
 		return unmarshalSessionBandwidth, nil
 	case "t=":
 		return unmarshalTiming, nil
+	case "m=":
+		return unmarshalMediaDescription, nil
 	}
 
 	return nil, fmt.Errorf("sdp: invalid syntax `%v`", key)
@@ -180,6 +190,8 @@ func s5(l *lexer) (stateFn, error) {
 		return unmarshalSessionBandwidth, nil
 	case "t=":
 		return unmarshalTiming, nil
+	case "m=":
+		return unmarshalMediaDescription, nil
 	}
 
 	return nil, fmt.Errorf("sdp: invalid syntax `%v`", key)
@@ -200,6 +212,8 @@ func s6(l *lexer) (stateFn, error) {
 		return unmarshalSessionBandwidth, nil
 	case "t=":
 		return unmarshalTiming, nil
+	case "m=":
+		return unmarshalMediaDescription, nil
 	}
 
 	return nil, fmt.Errorf("sdp: invalid syntax `%v`", key)
@@ -224,6 +238,8 @@ func s7(l *lexer) (stateFn, error) {
 		return unmarshalSessionBandwidth, nil
 	case "t=":
 		return unmarshalTiming, nil
+	case "m=":
+		return unmarshalMediaDescription, nil
 	}
 
 	return nil, fmt.Errorf("sdp: invalid syntax `%v`", key)
@@ -242,6 +258,8 @@ func s8(l *lexer) (stateFn, error) {
 		return unmarshalSessionBandwidth, nil
 	case "t=":
 		return unmarshalTiming, nil
+	case "m=":
+		return unmarshalMediaDescription, nil
 	}
 
 	return nil, fmt.Errorf("sdp: invalid syntax `%v`", key)
@@ -505,7 +523,7 @@ func unmarshalOrigin(l *lexer) (stateFn, error) {
 
 	// TODO validated UnicastAddress
 
-	l.desc.Origin = Origin{
+	l.desc.Origin = &Origin{
 		Username:       fields[0],
 		SessionID:      sessionID,
 		SessionVersion: sessionVersion,
@@ -523,7 +541,8 @@ func unmarshalSessionName(l *lexer) (stateFn, error) {
 		return nil, err
 	}
 
-	l.desc.SessionName = SessionName(value)
+	sessionName := SessionName(value)
+	l.desc.SessionName = &sessionName
 	return s4, nil
 }
 
@@ -827,8 +846,8 @@ func unmarshalMediaDescription(l *lexer) (stateFn, error) {
 	// Set according to currently registered with IANA
 	// https://tools.ietf.org/html/rfc4566#section-5.14
 	for _, proto := range strings.Split(fields[2], "/") {
-		if i := indexOf(proto, []string{"UDP", "RTP", "AVP", "SAVP", "SAVPF", "TLS", "DTLS", "SCTP", "AVPF"}); i == -1 {
-			return nil, fmt.Errorf("sdp: invalid value `%v`", fields[2])
+		if i := indexOf(proto, []string{"UDP", "RTP", "AVP", "SAVP", "SAVPF", "TLS", "DTLS", "SCTP", "AVPF", "TCP"}); i == -1 {
+			return nil, fmt.Errorf("sdp: invalid value CCC `%v`", fields[2])
 		}
 		newMediaDesc.MediaName.Protos = append(newMediaDesc.MediaName.Protos, proto)
 	}

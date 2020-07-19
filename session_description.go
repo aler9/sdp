@@ -15,11 +15,11 @@ type SessionDescription struct {
 
 	// o=<username> <sess-id> <sess-version> <nettype> <addrtype> <unicast-address>
 	// https://tools.ietf.org/html/rfc4566#section-5.2
-	Origin Origin
+	Origin *Origin
 
 	// s=<session name>
 	// https://tools.ietf.org/html/rfc4566#section-5.3
-	SessionName SessionName
+	SessionName *SessionName
 
 	// i=<session description>
 	// https://tools.ietf.org/html/rfc4566#section-5.4

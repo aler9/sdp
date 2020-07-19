@@ -172,6 +172,50 @@ const (
 		"a=sendrecv\r\n" +
 		"m=video 51372 RTP/AVP 99\r\n" +
 		"a=rtpmap:99 h263-1998/90000\r\n"
+
+	SDPWithoutTiming = "v=0\r\n" +
+		"m=video 0 RTP/AVP/TCP 96\r\n" +
+		"a=rtpmap:96 H265/90000\r\n" +
+		"a=fmtp:96 sprop-vps=QAEMAf//AWAAAAMAsAAAAwAAAwB4FwJA; sprop-sps=QgEBAWAAAAMAsAAAAwAAAwB4oAKggC8c1YgXuRZFL/y5/E/qbgQEBAE=; sprop-pps=RAHAcvBTJA==;\r\n" +
+		"a=control:streamid=0\r\n" +
+		"m=audio 0 RTP/AVP/TCP 97\r\n" +
+		"a=rtpmap:97 mpeg4-generic/44100/2\r\n" +
+		"a=fmtp:97 profile-level-id=1;mode=AAC-hbr;sizelength=13;indexlength=3;indexdeltalength=3;config=1210\r\n" +
+		"a=control:streamid=1\r\n"
+
+	SDPWithoutTiming2 = "v=0\r\n" +
+		"s=SDP Seminar\r\n" +
+		"m=video 0 RTP/AVP/TCP 96\r\n" +
+		"a=rtpmap:96 H265/90000\r\n" +
+		"a=fmtp:96 sprop-vps=QAEMAf//AWAAAAMAsAAAAwAAAwB4FwJA; sprop-sps=QgEBAWAAAAMAsAAAAwAAAwB4oAKggC8c1YgXuRZFL/y5/E/qbgQEBAE=; sprop-pps=RAHAcvBTJA==;\r\n" +
+		"a=control:streamid=0\r\n" +
+		"m=audio 0 RTP/AVP/TCP 97\r\n" +
+		"a=rtpmap:97 mpeg4-generic/44100/2\r\n" +
+		"a=fmtp:97 profile-level-id=1;mode=AAC-hbr;sizelength=13;indexlength=3;indexdeltalength=3;config=1210\r\n" +
+		"a=control:streamid=1\r\n"
+
+	SDPWithoutTiming3 = "v=0\r\n" +
+		"o=jdoe 2890844526 2890842807 IN IP4 10.47.16.5\r\n" +
+		"m=video 0 RTP/AVP/TCP 96\r\n" +
+		"a=rtpmap:96 H265/90000\r\n" +
+		"a=fmtp:96 sprop-vps=QAEMAf//AWAAAAMAsAAAAwAAAwB4FwJA; sprop-sps=QgEBAWAAAAMAsAAAAwAAAwB4oAKggC8c1YgXuRZFL/y5/E/qbgQEBAE=; sprop-pps=RAHAcvBTJA==;\r\n" +
+		"a=control:streamid=0\r\n" +
+		"m=audio 0 RTP/AVP/TCP 97\r\n" +
+		"a=rtpmap:97 mpeg4-generic/44100/2\r\n" +
+		"a=fmtp:97 profile-level-id=1;mode=AAC-hbr;sizelength=13;indexlength=3;indexdeltalength=3;config=1210\r\n" +
+		"a=control:streamid=1\r\n"
+
+	SDPWithoutTiming4 = "v=0\r\n" +
+		"o=jdoe 2890844526 2890842807 IN IP4 10.47.16.5\r\n" +
+		"s=SDP Seminar\r\n" +
+		"m=video 0 RTP/AVP/TCP 96\r\n" +
+		"a=rtpmap:96 H265/90000\r\n" +
+		"a=fmtp:96 sprop-vps=QAEMAf//AWAAAAMAsAAAAwAAAwB4FwJA; sprop-sps=QgEBAWAAAAMAsAAAAwAAAwB4oAKggC8c1YgXuRZFL/y5/E/qbgQEBAE=; sprop-pps=RAHAcvBTJA==;\r\n" +
+		"a=control:streamid=0\r\n" +
+		"m=audio 0 RTP/AVP/TCP 97\r\n" +
+		"a=rtpmap:97 mpeg4-generic/44100/2\r\n" +
+		"a=fmtp:97 profile-level-id=1;mode=AAC-hbr;sizelength=13;indexlength=3;indexdeltalength=3;config=1210\r\n" +
+		"a=control:streamid=1\r\n"
 )
 
 func TestRoundTrip(t *testing.T) {
@@ -289,6 +333,22 @@ func TestRoundTrip(t *testing.T) {
 		{
 			Name: "CanonicalUnmarshal",
 			SDP:  CanonicalUnmarshalSDP,
+		},
+		{
+			Name: "SDPWithoutTiming",
+			SDP:  SDPWithoutTiming,
+		},
+		{
+			Name: "SDPWithoutTiming2",
+			SDP:  SDPWithoutTiming2,
+		},
+		{
+			Name: "SDPWithoutTiming3",
+			SDP:  SDPWithoutTiming3,
+		},
+		{
+			Name: "SDPWithoutTiming4",
+			SDP:  SDPWithoutTiming4,
 		},
 	} {
 		test := test

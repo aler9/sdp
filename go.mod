@@ -1,4 +1,4 @@
-module github.com/pion/sdp/v2
+module github.com/aler9/sdp/v3
 
 go 1.12
 

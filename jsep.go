@@ -61,7 +61,7 @@ func NewJSEPSessionDescription(identity bool) (*SessionDescription, error) {
 	}
 	d := &SessionDescription{
 		Version: 0,
-		Origin: Origin{
+		Origin: &Origin{
 			Username:       "-",
 			SessionID:      sid,
 			SessionVersion: uint64(time.Now().Unix()),
@@ -69,7 +69,10 @@ func NewJSEPSessionDescription(identity bool) (*SessionDescription, error) {
 			AddressType:    "IP4",
 			UnicastAddress: "0.0.0.0",
 		},
-		SessionName: "-",
+		SessionName: func() *SessionName {
+			ret := SessionName("-")
+			return &ret
+		}(),
 		TimeDescriptions: []TimeDescription{
 			{
 				Timing: Timing{
