@@ -423,6 +423,31 @@ func TestUnmarshalNonNilAddress(t *testing.T) {
 	}
 }
 
+func TestUnmarshalLiveReporterOrigin(t *testing.T) {
+	in := "v=0\r\n" +
+		"o=-0 0 IN IP4 127.0.0.1\r\n" +
+		"s=No Name\r\n" +
+		"c=IN IP4 0.0.0.0\r\n" +
+		"t=0 0\r\n" +
+		"a=control:*\r\n" +
+		"m=video 0 RTP/AVP 96\r\n" +
+		"b=AS:253\r\n" +
+		"a=rtpmap:96 H264/90000\r\n" +
+		"a=fmtp:96 packetization-mode=1; sprop-parameter-sets=J2QAHqxWgKA9pqAgIMBA,KO48sA==; profile-level-id=64001E\r\n" +
+		"a=control:streamid=0\r\n" +
+		"m=audio 0 RTP/AVP 97\r\n" +
+		"b=AS:189\r\n" +
+		"a=rtpmap:97 MPEG4-GENERIC/48000/1\r\n" +
+		"a=fmtp:97 profile-level-id=1;mode=AAC-hbr;sizelength=13;indexLength=3;indexDeltaLength=3;config=118856E500\r\n" +
+		"a=control:streamid=1\r\n"
+
+	var sd SessionDescription
+	err := sd.Unmarshal([]byte(in))
+	if err != nil {
+		t.Fatalf("failed to unmarshal %q", in)
+	}
+}
+
 func BenchmarkUnmarshal(b *testing.B) {
 	raw := []byte(CanonicalUnmarshalSDP)
 	for i := 0; i < b.N; i++ {

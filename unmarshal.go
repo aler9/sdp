@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"strings"
+	"regexp"
 
 	"io"
 	"net/url"
@@ -488,16 +489,20 @@ func unmarshalProtocolVersion(l *lexer) (stateFn, error) {
 	return s2, nil
 }
 
+// live reporter does not put a space between username and session id
+var reOrigin = regexp.MustCompile("^([a-zA-Z0-9-]+) ?(.+?) (.+?) (.+?) (.+?) (.+?)$")
+
 func unmarshalOrigin(l *lexer) (stateFn, error) {
 	value, err := readValue(l.input)
 	if err != nil {
 		return nil, err
 	}
 
-	fields := strings.Fields(value)
-	if len(fields) != 6 {
+	fields := reOrigin.FindStringSubmatch(value)
+	if fields == nil {
 		return nil, fmt.Errorf("sdp: invalid syntax `o=%v`", fields)
 	}
+	fields = fields[1:]
 
 	sessionID, err := strconv.ParseUint(fields[1], 10, 64)
 	if err != nil {
