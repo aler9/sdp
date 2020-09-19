@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"strings"
 	"regexp"
+	"strings"
 
 	"io"
 	"net/url"
@@ -79,7 +79,7 @@ import (
 // |   s8   |    |       |    |     |    |   5 |   |    | 12 |   |   |     |   | 9 |    |   |    |
 // |   s9   |    |       |    |  11 |    |     |   |    | 12 |   |   |   9 |   |   |    |   | 13 |
 // |   s10  |    |       |    |     |    |   5 | 6 |    |    |   | 8 |     |   | 9 |    |   |    |
-// |   s11  |    |       | 11 |     |    |     |   |    | 12 |   |   |     |   |   |    |   |    |
+// |   s11  |    |       | 11 |     |    |   5 |   |    | 12 |   |   |     |   |   |    |   |    |
 // |   s12  |    |    14 |    |     |    |  15 |   | 16 | 12 |   |   |     |   |   |    |   |    |
 // |   s13  |    |       |    |  11 |    |     |   |    | 12 |   |   |     |   |   |    |   |    |
 // |   s14  | 14 |       |    |     |    |     |   |    | 12 |   |   |     |   |   |    |   |    |
@@ -329,6 +329,8 @@ func s11(l *lexer) (stateFn, error) {
 		return unmarshalSessionAttribute, nil
 	case "m=":
 		return unmarshalMediaDescription, nil
+	case "c=":
+		return unmarshalSessionConnectionInformation, nil
 	}
 
 	return nil, fmt.Errorf("sdp: invalid syntax `%v`", key)
