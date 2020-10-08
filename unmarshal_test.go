@@ -246,6 +246,20 @@ const (
 		"a=recvonly\r\n" +
 		"a=framerate:25.0\r\n" +
 		"a=fmtp:105 packetization-mode=1; profile-level-id=640028; sprop-parameter-sets=Z2QAKKwa0A8ARPy4CIAAAAMAgAAADLWgAtwAHJ173CPFCKg=,KO4ESSJAAAAAAAAAAA==\r\n"
+
+	SDPWithoutTimingButGlobalAttrs = "v=0\r\n" +
+		"o=- 1601628642593 1 IN IP4 172.20.1.150\r\n" +
+		"s=Session\r\n" +
+		"i=Camera arhive stream\r\n" +
+		"c=IN IP4 5.19.245.3\r\n" +
+		"a=control:rtsp://172.20.1.150:3297/streams/videoa=recvonly\r\n" +
+		"a=range:clock=20200908T132728Z-20200909T030844Z;clock=20200909T031019Z-20200909T103133Z;clock=20200909T103300Z-20200909T141237Z\r\n" +
+		"a=packetization-supported:DH\r\n" +
+		"m=video 0 RTP/AVP 96\r\n" +
+		"a=proto:RTP/AVP;unicast\r\n" +
+		"a=tool:Archive controller\r\n" +
+		"a=rtpmap:96 H264/90000\r\n" +
+		"a=fmtp:96 packetization-mode=1;sprop-parameter-sets=Z00AHpY1QWh7TcBAQECA,aO48gA==\r\n"
 )
 
 func TestRoundTrip(t *testing.T) {
@@ -379,6 +393,10 @@ func TestRoundTrip(t *testing.T) {
 		{
 			Name: "SDPWithoutTiming4",
 			SDP:  SDPWithoutTiming4,
+		},
+		{
+			Name: "SDPWithoutTimingButGlobalAttrs",
+			SDP:  SDPWithoutTimingButGlobalAttrs,
 		},
 	} {
 		test := test

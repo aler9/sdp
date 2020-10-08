@@ -191,6 +191,8 @@ func s5(l *lexer) (stateFn, error) {
 		return unmarshalSessionBandwidth, nil
 	case "t=":
 		return unmarshalTiming, nil
+	case "a=":
+		return unmarshalSessionAttribute, nil
 	case "m=":
 		return unmarshalMediaDescription, nil
 	}
