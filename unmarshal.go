@@ -147,6 +147,8 @@ func s3(l *lexer) (stateFn, error) {
 		return unmarshalSessionName, nil
 	case "m=":
 		return unmarshalMediaDescription, nil
+	case "a=":
+		return unmarshalSessionAttribute, nil
 	}
 
 	return nil, fmt.Errorf("sdp: invalid syntax `%v`", key)
@@ -175,6 +177,8 @@ func s4(l *lexer) (stateFn, error) {
 		return unmarshalTiming, nil
 	case "m=":
 		return unmarshalMediaDescription, nil
+	case "a=":
+		return unmarshalSessionAttribute, nil
 	}
 
 	return nil, fmt.Errorf("sdp: invalid syntax `%v`", key)
@@ -333,6 +337,10 @@ func s11(l *lexer) (stateFn, error) {
 		return unmarshalMediaDescription, nil
 	case "c=":
 		return unmarshalSessionConnectionInformation, nil
+	case "s=":
+		return unmarshalSessionName, nil
+	case "t=":
+		return unmarshalTiming, nil
 	}
 
 	return nil, fmt.Errorf("sdp: invalid syntax `%v`", key)

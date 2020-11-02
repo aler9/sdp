@@ -260,6 +260,24 @@ const (
 		"a=tool:Archive controller\r\n" +
 		"a=rtpmap:96 H264/90000\r\n" +
 		"a=fmtp:96 packetization-mode=1;sprop-parameter-sets=Z00AHpY1QWh7TcBAQECA,aO48gA==\r\n"
+
+	SdpWithUnorderedGlobalAttrs = "v=0\r\n" +
+		"o=- 1646532490 1646532490 IN IP4 10.175.31.17\r\n" +
+		"a=control:*\r\n" +
+		"a=source-filter: incl IN IP4 * 10.175.31.17\r\n" +
+		"s=RTSP Server\r\n" +
+		"a=range:npt=0-\r\n" +
+		"t=0 0\r\n" +
+		"m=video 0 RTP/AVP 96\r\n" +
+		"c=IN IP4 0.0.0.0\r\n" +
+		"a=rtpmap:96 H264/90000\r\n" +
+		"a=fmtp:96 profile-level-id=4D001E; packetization-mode=1; sprop-parameter-sets=Z00AHpWoKAv+VA==,aO48gA==\r\n" +
+		"a=control:?ctype=video\r\n" +
+		"a=recvonly\r\n" +
+		"m=application 0 RTP/AVP 106\r\n" +
+		"a=rtpmap:106 vnd.onvif.metadata/90000\r\n" +
+		"a=control:?ctype=app106\r\n" +
+		"a=sendonly\r\n"
 )
 
 func TestRoundTrip(t *testing.T) {
@@ -483,6 +501,10 @@ func TestUnmarshalNonStandard(t *testing.T) {
 		{
 			Name: "SDPSony",
 			SDP:  SDPSony,
+		},
+		{
+			Name: "SdpWithUnorderedGlobalAttrs",
+			SDP:  SdpWithUnorderedGlobalAttrs,
 		},
 	} {
 		t.Run(test.Name, func(t *testing.T) {
