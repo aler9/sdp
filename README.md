@@ -1,3 +1,10 @@
+# DEPRECATED
+
+A SDP implementation fit for RTSP is included in https://github.com/aler9/gortsplib
+
+<br />
+<br />
+
 <h1 align="center">
   <br>
   Pion SDP
